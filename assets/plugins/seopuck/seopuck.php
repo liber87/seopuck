@@ -80,11 +80,19 @@ if ($e->name=='OnWebPagePrerender')
 		}
 	}
 	if ($external_link=='true')
-	{
+	{		
 		//Закрываем внешние ссылки
 		$outlink = $html->find("a[href^=http]");
-		foreach($outlink as $ou) if (strpos($ou->href, MODX_SITE_URL)===false) $ou->href = MODX_SITE_URL.''.$error_page.'?url='.$ou->href;
+		foreach($outlink as $ou)
+		{
+			if (strpos($ou->href, MODX_SITE_URL)===false) 
+			{
+				$ou->href = MODX_SITE_URL.''.$error_page.'?url='.$ou->href;
+			}
+			echo $ou.PHP_EOL;			
+		}		
 	}	
+	
 	if ($img_alt=='true')	
 	{
 		//Проставляем тэг alt для картинок      
@@ -127,25 +135,6 @@ if ($e->name=='OnWebPagePrerender')
 			$mk->content = mb_substr($mk->content.','.implode(',',$out), 0, 200);
 		}  
 	}
-	if ($one_line=='true')
-	{		
-		// Хак для того, чтобы не сжимать тэг <pre>     
-		$pre = $html->find("pre"); 
-		if (count($pre)) 
-		{
-			$arr_pre = array();
-			foreach ($pre as $p) $arr_pre[] = $p->outertext;
-		}
-		$content = $html->save();
-		$html->clear(); 
-		$content = compress_html($content); //Вытягиваем в 1-у строку
-		// Хак для того, чтобы не сжимать тэг <pre>
-		if (count($pre)) 
-		{       
-			preg_match_all('~<pre(.*?)pre>~s', $content, $matches);
-			foreach ($matches[0] as $key => $pre) $content = str_replace($pre,$arr_pre[$key],$content);
-		}
-	}	
 	if ($favicon_generate=='true')
 	{
 		$fi='';
@@ -178,7 +167,25 @@ if ($e->name=='OnWebPagePrerender')
 		<link rel="icon" href="'.$modx->runSnippet('phpthumb',array('input'=>$img,'options'=>'w=16,h=16,f=ico,far=C,bg='.$bg)).'" type="image/x-icon">';
 		$content = str_replace('</head>',$fi.'</head>',$content);
 	}
-	
+	if ($one_line=='true')
+	{		
+		// Хак для того, чтобы не сжимать тэг <pre>     
+		$pre = $html->find("pre"); 
+		if (count($pre)) 
+		{
+			$arr_pre = array();
+			foreach ($pre as $p) $arr_pre[] = $p->outertext;
+		}		
+		$content = compress_html($content); //Вытягиваем в 1-у строку
+		// Хак для того, чтобы не сжимать тэг <pre>
+		if (count($pre)) 
+		{       
+			preg_match_all('~<pre(.*?)pre>~s', $content, $matches);
+			foreach ($matches[0] as $key => $pre) $content = str_replace($pre,$arr_pre[$key],$content);
+		}
+	}	
+	$content = $html->save();
+	$html->clear(); 	
 	$modx->Event->output($content);
 }
 if ($e->name=='OnPageNotFound')
