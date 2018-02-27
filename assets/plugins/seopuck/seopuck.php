@@ -1,5 +1,5 @@
 <?php
-	if(!isset($_SESSION['mgrValidated'])){ die();}
+	defined('IN_MANAGER_MODE') or die();
 	$error_page = 'exit.php'; //Уникальное название страницы, куда первоначально будем делать редирект при внешнем ресурсе 
 	
 	$e =&$modx->Event;
