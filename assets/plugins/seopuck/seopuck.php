@@ -1,7 +1,16 @@
 <?php
 defined('IN_MANAGER_MODE') or die();
 $error_page = isset($error_page) ? $error_page : 'exit.php'; 
-  //Уникальное название страницы, куда первоначально будем делать редирект при внешнем ресурсе 
+$min = isset($min) ? $min : 4; 
+$limit = isset($limit) ? $limit : 20; 
+$tags = isset($tags) ? $tags : 'h1,h2,h3,h4,h5,h6,b,i,strong'; 
+$link_title = isset($link_title) ? $link_title : true; 
+$circle_link = isset($circle_link) ? $circle_link : true; 
+$external_link = isset($external_link) ? $external_link : true; 
+$img_alt = isset($img_alt) ? $img_alt : true; 
+$generate_tag = isset($generate_tag) ? $generate_tag : true; 
+$one_line = isset($one_line) ? $one_line : true; 
+  
 $e =&$modx->Event;
 if (!function_exists('compress_html')) { 
 	function compress_html($compress)
@@ -89,10 +98,7 @@ if ($e->name=='OnWebPagePrerender')
 		//Генерим ключевики по тэгам
 		$mk = $html->find('meta[name=keywords]',0);
 		if (count($mk))         
-		{
-			$min = isset($min) ? $min : 4; 
-			$limit = isset($limit) ? $limit : 20; 
-			$tags = isset($tags) ? $tags : 'h1,h2,h3,h4,h5,h6,b,i,strong'; 
+		{			
 			$keywords = array();
 			$keyws = $html->find($tags);
 			foreach($keyws as $keyw) $keywords[]=$keyw->plaintext;
