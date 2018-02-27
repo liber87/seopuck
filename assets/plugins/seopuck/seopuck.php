@@ -10,7 +10,7 @@ $external_link = isset($external_link) ? $external_link : true;
 $img_alt = isset($img_alt) ? $img_alt : true; 
 $generate_tag = isset($generate_tag) ? $generate_tag : true; 
 $one_line = isset($one_line) ? $one_line : true; 
-  
+
 $e =&$modx->Event;
 if (!function_exists('compress_html')) { 
 	function compress_html($compress)
@@ -36,7 +36,7 @@ if ($e->name=='OnWebPagePrerender')
 	$metaTitle = str_replace("'","'",$title->plaintext); // Чтобы не искать потом - заголовок страницы
 	$imagealt = $metaTitle.' '.$image_name.' '; //в конце подставляется порядковый номер начиная с 1
 	$atitle = $metaTitle.' '.$link_name.' '; //в конце подставляется порядковый номер начиная с 1
-	if ($link_title)
+	if ($link_title=='true')
 	{
 		//Проставляем тэг title для ссылок
 		$links = $html->find("a"); 
@@ -63,7 +63,7 @@ if ($e->name=='OnWebPagePrerender')
 			}
 		}
 	}
-	if ($circle_link)
+	if ($circle_link=='true')
 	{
 		//Убираем циклические ссылки
 		$url = substr($_SERVER['REQUEST_URI'], 1);
@@ -73,13 +73,13 @@ if ($e->name=='OnWebPagePrerender')
 			foreach($cu as $u) $u->href = null;
 		}
 	}
-	if ($external_link)
+	if ($external_link=='true')
 	{
 		//Закрываем внешние ссылки
 		$outlink = $html->find("a[href^=http]");
 		foreach($outlink as $ou) if (strpos($ou->href, MODX_SITE_URL)===false) $ou->href = MODX_SITE_URL.''.$error_page.'?url='.$ou->href;
 	}	
-	if ($img_alt)	
+	if ($img_alt=='true')	
 	{
 		//Проставляем тэг alt для картинок      
 		$imgs = $html->find("img"); 
@@ -93,7 +93,7 @@ if ($e->name=='OnWebPagePrerender')
 			}
 		}
 	}
-	if ($generate_tag)
+	if ($generate_tag=='true')
 	{
 		//Генерим ключевики по тэгам
 		$mk = $html->find('meta[name=keywords]',0);
@@ -121,8 +121,8 @@ if ($e->name=='OnWebPagePrerender')
 			$mk->content = mb_substr($mk->content.','.implode(',',$out), 0, 200);
 		}  
 	}
-	if ($one_line)
-	{
+	if ($one_line=='true')
+	{		
 		// Хак для того, чтобы не сжимать тэг <pre>     
 		$pre = $html->find("pre"); 
 		if (count($pre)) 
