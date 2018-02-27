@@ -9,7 +9,7 @@
  * @internal    @properties 
  * @internal    @events OnWebPagePrerender,OnPageNotFound
  * @internal    @modx_category Manager and Admin
- * @internal    @properties &image_name=Что подставлять к картинке?;string;Картинка &link_name=Что подставлять к ссылке?;string;Ссылка 
+ * @internal    @properties &img_alt=Подставлять Alt к картинкам;list;true,false;true  &image_name=Что подставлять к картинке?;string;Картинка &link_title=Подставлять Title к ссылкам;list;true,false;true &link_name=Что подставлять к ссылке?;string;Ссылка 
  * @internal    @installset base
  */
 
