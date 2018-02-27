@@ -11,6 +11,12 @@ $img_alt = isset($img_alt) ? $img_alt : true;
 $generate_tag = isset($generate_tag) ? $generate_tag : true; 
 $one_line = isset($one_line) ? $one_line : true; 
 
+$favicon_generate = isset($favicon_generate) ? $favicon_generate : false;
+$bg = isset($bg) ? $bg : "FFFFFF";
+$img = isset($img) ? $img : "";
+
+
+
 $e =&$modx->Event;
 if (!function_exists('compress_html')) { 
 	function compress_html($compress)
@@ -140,6 +146,39 @@ if ($e->name=='OnWebPagePrerender')
 			foreach ($matches[0] as $key => $pre) $content = str_replace($pre,$arr_pre[$key],$content);
 		}
 	}	
+	if ($favicon_generate=='true')
+	{
+		$fi='';
+				
+		$sizes = array('57x57','144x144','72x72','144x144','60x60','120x120','76x76','152x152');
+		foreach ($sizes as $size)
+		{
+		$as = explode('x',$size);
+		$fi.='<link rel="apple-touch-icon-precomposed" sizes="'.$size.'" href="'.$modx->runSnippet('phpthumb',array('input'=>$img,'options'=>'w='.$as[0].',h='.$as[1].',f=png,far=C,bg='.$bg)).'"/>'.PHP_EOL;		
+		}
+
+		//classic
+		$sizes = array('32x32','16x16','96x96','128x128','196x196');
+		foreach ($sizes as $size)
+		{
+		$as = explode('x',$size);
+		$fi.='<link rel="icon" type="image/png" sizes="'.$size.'" href="'.$modx->runSnippet('phpthumb',array('input'=>$img,'options'=>'w='.$as[0].',h='.$as[1],',f=png,far=C,bg='.$bg)).'"/>'.PHP_EOL;
+		}
+
+		// MS
+		$out.='<meta name="msapplication-TileColor" content="#FFFFFF" />'.PHP_EOL;
+		$out.='<meta name="msapplication-TileImage" content="'.$modx->runSnippet('phpthumb',array('input'=>$img,'options'=>'w=144,h=144,f=png,far=C,bg='.$bg)).'" />'.PHP_EOL;
+		$sizes = array('70x70','150x150','310x310');
+		foreach ($sizes as $size)
+		{
+		$as = explode('x',$size);
+		$fi.='<meta name="msapplication-square'.$size.'logo" content="'.$modx->runSnippet('phpthumb',array('input'=>$img,'options'=>'w='.$as[0].',h='.$as[1].',f=png,far=C,bg='.$bg)).'"/>'.PHP_EOL;
+		}		
+		$fi.='<link rel="shortcut icon" href="'.$modx->runSnippet('phpthumb',array('input'=>$img,'options'=>'w=16,h=16,f=ico,far=C,bg='.$bg)).'" type="image/x-icon">
+		<link rel="icon" href="'.$modx->runSnippet('phpthumb',array('input'=>$img,'options'=>'w=16,h=16,f=ico,far=C,bg='.$bg)).'" type="image/x-icon">';
+		$content = str_replace('</head>',$fi.'</head>',$content);
+	}
+	
 	$modx->Event->output($content);
 }
 if ($e->name=='OnPageNotFound')
