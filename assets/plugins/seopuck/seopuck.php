@@ -88,8 +88,7 @@ if ($e->name=='OnWebPagePrerender')
 			if (strpos($ou->href, MODX_SITE_URL)===false) 
 			{
 				$ou->href = MODX_SITE_URL.''.$error_page.'?url='.$ou->href;
-			}
-			echo $ou.PHP_EOL;			
+			}						
 		}		
 	}	
 	
