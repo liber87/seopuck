@@ -1,5 +1,4 @@
 <?php
-defined('IN_MANAGER_MODE') or die();
 $error_page = isset($error_page) ? $error_page : 'exit.php'; 
 $min = isset($min) ? $min : 4; 
 $limit = isset($limit) ? $limit : 20; 
