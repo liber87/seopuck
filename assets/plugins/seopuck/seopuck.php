@@ -1,4 +1,4 @@
-<?php
+defined('IN_MANAGER_MODE') or die();
 $error_page = isset($error_page) ? $error_page : 'exit.php'; 
 $min = isset($min) ? $min : 4; 
 $limit = isset($limit) ? $limit : 20; 
@@ -73,7 +73,8 @@ if ($e->name=='OnWebPagePrerender')
 		//Убираем циклические ссылки
 		$url = substr($_SERVER['REQUEST_URI'], 1);
 		if ($url)
-		{
+		{	
+
 			$cu =  $html->find("a[href='".$url."']"); 
 			foreach($cu as $u) $u->href = null;
 		}
@@ -86,7 +87,9 @@ if ($e->name=='OnWebPagePrerender')
 		{
 			if (strpos($ou->href, MODX_SITE_URL)===false) 
 			{
-				$ou->href = MODX_SITE_URL.''.$error_page.'?url='.$ou->href;
+				$h = str_replace('?','%3F',$ou->href);
+				$h = str_replace('&','%26',$h);
+				$ou->href = MODX_SITE_URL.''.$error_page.'?url='.$h;
 			}						
 		}		
 	}	
@@ -188,7 +191,7 @@ if ($e->name=='OnWebPagePrerender')
 }
 if ($e->name=='OnPageNotFound')
 {
-	$q = $modx->db->escape($_REQUEST['q']);
+	$q = $modx->db->escape($_REQUEST['q']);	
 	if (isset($_GET['url']) && (!empty($_GET['url'])) && ($q==$error_page))
 	{
 		$url = $_GET['url'];
