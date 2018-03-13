@@ -204,12 +204,15 @@ if ($e->name=='OnPageNotFound')
 			{
 				exit ("<p>Неверный формат запроса! Проверьте URL!</p>");
 			} 
-			header("Location:$url");
-			exit();
+			else 
+			{
+				header("Location:$url");
+				exit();
+			}
 		}
 		else 
 		{
-			die('fuck eor, hacke fucking');
+			die('fuck eor, hacker fucking');
 		}
 	}
 }       	
