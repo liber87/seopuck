@@ -191,15 +191,26 @@ if ($e->name=='OnWebPagePrerender')
 }
 if ($e->name=='OnPageNotFound')
 {
+
 	$q = $modx->db->escape($_REQUEST['q']);	
 	if (isset($_GET['url']) && (!empty($_GET['url'])) && ($q==$error_page))
 	{
-		$url = $_GET['url'];
-		if (!preg_match('#(https?|ftp)://\S+[^\s.,>)\];\'\"!?]#i',$url)) 
+	$pos = strpos($_SERVER['HTTP_REFERER'], $_SERVER["HTTP_HOST"]);
+		
+		if ($pos)
+		{	
+			$url = $_GET['url'];
+			if (!preg_match('#(https?|ftp)://\S+[^\s.,>)\];\'\"!?]#i',$url)) 
+			{
+				exit ("<p>Неверный формат запроса! Проверьте URL!</p>");
+			} 
+			header("Location:$url");
+			exit();
+		}
+		else 
 		{
-			exit ("<p>Неверный формат запроса! Проверьте URL!</p>");
-		} 
-		header("Location:$url");
-		exit();
+			die('fuck eor, hacke fucking');
+		}
 	}
 }       	
+//i dont know what is psr
